@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VelocityPass | Train & Luxury Bus Ticket Reservation System</title>
+  <meta name="description" content="Next-generation online ticket reservation system for high-speed bullet trains, sleeper coaches, and luxury intercity buses. Real-time visual seat selection, instant PNR tracking, and boarding passes.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%20viewBox=%220%200%20100%20100%22><text y=%22.9em%22 font-size=%2290%22>🚅</text></svg>">
+</head>
+<body>
+
+  <!-- Navigation Header -->
+  <header class="app-header" id="app-header">
+    <div class="container header-inner">
+      <div class="brand-logo" id="brand-logo-btn" style="cursor: pointer;">
+        <div class="logo-symbol">🚅</div>
+        <div>
+          <span class="logo-text">VelocityPass</span>
+          <span class="logo-tag">Rail & Road Transit Hub</span>
+        </div>
+      </div>
+
+      <nav>
+        <ul class="nav-links">
+          <li>
+            <a href="#search" class="nav-item active" id="nav-book-tickets">
+              <span>🔍 Book Tickets</span>
+            </a>
+          </li>
+          <li>
+            <a href="#bookings" class="nav-item" id="nav-my-bookings">
+              <span>🎫 My Bookings</span>
+              <span class="badge-counter" id="my-bookings-count-badge">2</span>
+            </a>
+          </li>
+          <li>
+            <a href="#pnr" class="nav-item" id="nav-pnr-status">
+              <span>🔎 PNR Enquiry</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="header-controls">
+        <button type="button" class="btn btn-outline btn-sm" id="sound-toggle-btn" title="Toggle tactile sound effects">
+          🔊 Sound On
+        </button>
+        <button type="button" class="btn btn-outline btn-sm" id="theme-toggle-btn" title="Toggle dark or light theme">
+          ☀️ Light
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero & Search Section -->
+  <section class="hero-section" id="hero-section">
+    <div class="hero-background-banner"></div>
+    <div class="container">
+      <div class="hero-content">
+        <!-- Mode Switcher -->
+        <div class="mode-switcher-container" role="tablist">
+          <button type="button" class="mode-toggle-btn active" data-mode="train" id="mode-btn-train" role="tab" aria-selected="true">
+            <span>🚆</span> High-Speed Trains
+          </button>
+          <button type="button" class="mode-toggle-btn" data-mode="bus" id="mode-btn-bus" role="tab" aria-selected="false">
+            <span>🚌</span> Luxury Buses
+          </button>
+        </div>
+
+        <h1 class="hero-headline" id="hero-title">
+          High-Speed Rail & <span class="highlight">Express Train</span> Reservation
+        </h1>
+        <p class="hero-subheadline" id="hero-subtitle">
+          Book bullet trains, luxury sleeper berths, and intercity express coaches with zero convenience fees
+        </p>
+      </div>
+
+      <!-- Main Search Card -->
+      <div class="search-widget-card" id="search-card">
+        <form id="main-search-form">
+          <div class="search-form-grid">
+            <!-- Origin -->
+            <div class="search-input-field">
+              <label for="select-from-city">From Station / City</label>
+              <div class="input-with-icon">
+                <span class="field-icon">📍</span>
+                <select id="select-from-city" required></select>
+              </div>
+            </div>
+
+            <!-- Swap Cities Button -->
+            <button type="button" class="swap-city-btn" id="btn-swap-cities" title="Swap Origin & Destination">
+              ⇄
+            </button>
+
+            <!-- Destination -->
+            <div class="search-input-field">
+              <label for="select-to-city">To Station / City</label>
+              <div class="input-with-icon">
+                <span class="field-icon">🏁</span>
+                <select id="select-to-city" required></select>
+              </div>
+            </div>
+
+            <!-- Date -->
+            <div class="search-input-field">
+              <label for="input-journey-date">Date of Travel</label>
+              <div class="input-with-icon">
+                <span class="field-icon">📅</span>
+                <input type="date" id="input-journey-date" required />
+              </div>
+            </div>
+
+            <!-- Class / Bus Type Filter -->
+            <div class="search-input-field">
+              <label for="select-class-filter">Class / Coach</label>
+              <div class="input-with-icon">
+                <span class="field-icon">💺</span>
+                <select id="select-class-filter">
+                  <option value="ALL">All Train Classes</option>
+                  <option value="1A">1st AC Sleeper (1A)</option>
+                  <option value="2A">2-Tier AC Sleeper (2A)</option>
+                  <option value="3A">3-Tier AC Sleeper (3A)</option>
+                  <option value="EC">Executive Chair Car (EC)</option>
+                  <option value="CC">AC Chair Car (CC)</option>
+                  <option value="SL">Sleeper Class (SL)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Submit CTA -->
+            <button type="submit" class="btn btn-primary btn-search-cta" id="btn-search-services">
+              <span>Find Departures</span> ➔
+            </button>
+          </div>
+
+          <!-- Quick Date Presets -->
+          <div class="search-presets-row">
+            <div class="presets-group">
+              <span class="presets-label">Quick Dates:</span>
+              <button type="button" class="date-preset-chip" data-days="0" id="preset-today">Today</button>
+              <button type="button" class="date-preset-chip active" data-days="1" id="preset-tomorrow">Tomorrow</button>
+              <button type="button" class="date-preset-chip" data-days="2" id="preset-2days">+2 Days</button>
+              <button type="button" class="date-preset-chip" data-days="5" id="preset-weekend">Weekend</button>
+            </div>
+            <div class="presets-group">
+              <span class="presets-label">Popular Routes:</span>
+              <button type="button" class="date-preset-chip" onclick="document.getElementById('select-from-city').value='NYC';document.getElementById('select-to-city').value='WAS';document.getElementById('btn-search-services').click();">NYC ➔ WAS</button>
+              <button type="button" class="date-preset-chip" onclick="document.getElementById('select-from-city').value='NYC';document.getElementById('select-to-city').value='BOS';document.getElementById('btn-search-services').click();">NYC ➔ BOS</button>
+              <button type="button" class="date-preset-chip" onclick="document.getElementById('select-from-city').value='SFO';document.getElementById('select-to-city').value='LAX';document.getElementById('btn-search-services').click();">SFO ➔ LAX</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main View Container -->
+  <main class="container">
+
+    <!-- View 1: Search Results List -->
+    <section id="search-results-section" style="display: block;">
+      <!-- Filter and Sort Bar -->
+      <div class="filters-bar-container" id="filters-bar">
+        <h3 class="results-headline" id="results-count-headline">Searching Available Departures...</h3>
+
+        <div class="filters-cluster">
+          <!-- Departure Time Filters -->
+          <div class="filter-group">
+            <span class="filter-lbl">Departure Time:</span>
+            <div class="time-slot-pills">
+              <button type="button" class="time-slot-pill active" data-slot="ALL" id="slot-all">All</button>
+              <button type="button" class="time-slot-pill" data-slot="morning" id="slot-morning">🌅 06:00-12:00</button>
+              <button type="button" class="time-slot-pill" data-slot="afternoon" id="slot-afternoon">☀️ 12:00-18:00</button>
+              <button type="button" class="time-slot-pill" data-slot="night" id="slot-night">🌙 18:00+</button>
+            </div>
+          </div>
+
+          <!-- Price Range Slider -->
+          <div class="filter-group price-slider-group">
+            <span class="filter-lbl">Max Price:</span>
+            <input type="range" id="filter-price-range" min="20" max="250" step="5" value="200" />
+            <strong id="price-range-val">$200</strong>
+          </div>
+
+          <!-- Sort -->
+          <div class="filter-group">
+            <span class="filter-lbl">Sort By:</span>
+            <select id="select-sort-by" onchange="document.querySelector(`input[name='sort_by'][value='${this.value}']`)?.click();" style="background:var(--bg-surface-elevated);border:1px solid var(--border-subtle);color:var(--text-main);padding:4px 8px;border-radius:6px;">
+              <option value="departure">Earliest Departure</option>
+              <option value="fare">Lowest Price</option>
+              <option value="duration">Fastest Duration</option>
+              <option value="rating">Highest Rated</option>
+            </select>
+            <div style="display:none;">
+              <input type="radio" name="sort_by" value="departure" checked />
+              <input type="radio" name="sort_by" value="fare" />
+              <input type="radio" name="sort_by" value="duration" />
+              <input type="radio" name="sort_by" value="rating" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results Cards Mount -->
+      <div class="results-list-container" id="search-results-list"></div>
+    </section>
+
+    <!-- View 2: Visual Seat Selection -->
+    <section id="seat-selection-section" class="seat-selection-view" style="display: none;">
+      <div class="section-top-navigation">
+        <button type="button" class="btn btn-outline btn-sm" id="btn-back-to-results">
+          ← Back to Departures List
+        </button>
+        <span class="step-counter-tag" style="font-weight:700;color:var(--accent-cyan);">Step 2 of 3: Select Your Preferred Seats</span>
+      </div>
+
+      <div class="service-banner-mount" id="seatmap-service-banner"></div>
+
+      <!-- Mount for SeatMapManager -->
+      <div id="seatmap-mount"></div>
+
+      <div class="seatmap-footer-bar">
+        <button type="button" class="btn btn-primary" id="btn-proceed-passenger" disabled>
+          Select seats on the map above
+        </button>
+      </div>
+    </section>
+
+    <!-- View 3: Passenger Details & Checkout -->
+    <section id="passenger-details-section" class="passenger-details-view" style="display: none;">
+      <div class="section-top-navigation">
+        <button type="button" class="btn btn-outline btn-sm" id="btn-back-to-seatmap">
+          ← Change Seat Selection
+        </button>
+        <span class="step-counter-tag" style="font-weight:700;color:var(--accent-cyan);">Step 3 of 3: Passenger Information & Add-ons</span>
+      </div>
+
+      <div class="checkout-view-grid">
+        <!-- Left Column: Forms -->
+        <div class="checkout-forms-column">
+          <!-- Dynamic Passenger Mount -->
+          <div id="passenger-forms-mount"></div>
+
+          <!-- Contact Details Box -->
+          <div class="contact-details-box">
+            <h4>📱 Primary Contact Information</h4>
+            <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:14px;">Your digital boarding pass, SMS alerts, and invoice will be delivered here.</p>
+            <div class="contact-inputs-grid">
+              <div class="form-group">
+                <label for="input-contact-email">Email Address</label>
+                <input type="email" id="input-contact-email" value="alex.johnson@example.com" placeholder="name@domain.com" required />
+              </div>
+              <div class="form-group">
+                <label for="input-contact-phone">Mobile Phone (with country code)</label>
+                <input type="tel" id="input-contact-phone" value="+1 (555) 382-9910" placeholder="+1 (555) 000-0000" required />
+              </div>
+            </div>
+          </div>
+
+          <!-- Travel Add-ons Box -->
+          <div class="addons-box">
+            <h4>🛡️ Travel Protection & Upgrades</h4>
+            <div class="addon-row">
+              <input type="checkbox" id="cb-addon-insurance" checked />
+              <div class="addon-meta">
+                <strong>Comprehensive Travel Shield (+$2.50 / pax)</strong>
+                <span>Up to $25,000 emergency medical assistance, baggage loss protection & trip delay cover.</span>
+              </div>
+            </div>
+            <div class="addon-row">
+              <input type="checkbox" id="cb-addon-carbon" />
+              <div class="addon-meta">
+                <strong>Carbon-Neutral Transit Pledge (+$1.00 / pax)</strong>
+                <span>Offset 100% of your journey's carbon footprint through verified green reforestation projects.</span>
+              </div>
+            </div>
+            <div class="addon-row">
+              <input type="checkbox" id="cb-addon-meal" />
+              <div class="addon-meta">
+                <strong>Gourmet Onboard Dining Box (+$8.50 / pax)</strong>
+                <span>Chef-curated warm meal box served at your seat with fresh artisan beverage & dessert.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Promo Code Box -->
+          <div class="coupons-box">
+            <h4>🎟️ Apply Promo Voucher / Coupon</h4>
+            <div class="coupon-input-group">
+              <input type="text" id="input-coupon-code" placeholder="Enter coupon code" />
+              <button type="button" class="btn btn-outline" id="btn-apply-coupon">Apply</button>
+            </div>
+            <div class="available-coupons-chips">
+              <span style="font-size:0.8rem;color:var(--text-dim);align-self:center;">Tap to apply:</span>
+              <button type="button" class="coupon-pill" data-code="SUPERTRIP">SUPERTRIP (15% OFF)</button>
+              <button type="button" class="coupon-pill" data-code="FIRSTBOOK">FIRSTBOOK ($20 OFF)</button>
+              <button type="button" class="coupon-pill" data-code="GOEXPRESS">GOEXPRESS (10% OFF)</button>
+            </div>
+            <div id="coupon-badge-mount"></div>
+          </div>
+        </div>
+
+        <!-- Right Column: Fare Breakdown Card -->
+        <div class="checkout-summary-column">
+          <div id="fare-summary-mount"></div>
+          <button type="button" class="btn btn-primary btn-pay-now" id="btn-proceed-checkout" style="width:100%;margin-top:16px;height:52px;font-size:1.05rem;">
+            Proceed to Secure Payment ➔
+          </button>
+          <div style="text-align:center;margin-top:12px;font-size:0.75rem;color:var(--text-dim);">
+            🔒 256-bit Bank Grade Encryption • Instant Confirmation
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- View 4: My Bookings Dashboard -->
+    <section id="my-bookings-section" style="display: none;">
+      <div class="filters-bar-container" style="margin-top: 0;">
+        <div>
+          <h3>My Reservations & Travel History</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">Manage upcoming departures, print official boarding passes, or request instant refunds.</p>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="document.getElementById('nav-book-tickets').click();">
+          + Book New Journey
+        </button>
+      </div>
+
+      <div id="my-bookings-list"></div>
+    </section>
+
+    <!-- View 5: PNR Status Enquiry -->
+    <section id="pnr-enquiry-section" style="display: none;">
+      <div class="search-widget-card" style="margin-bottom: 24px;">
+        <h3>🔎 Live PNR Status & Train/Bus Radar</h3>
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 16px;">
+          Enter your 10-character Passenger Name Record (PNR) to inspect real-time chart preparation, coach berth allotment, and current GPS location.
+        </p>
+        <form id="pnr-search-form" style="display: flex; gap: 12px; max-width: 540px;">
+          <input 
+            type="text" 
+            id="input-pnr-query" 
+            placeholder="e.g. TRN-884920 or BUS-621840" 
+            value="TRN-884920" 
+            style="flex: 1; height: 48px; padding: 0 16px; border-radius: var(--radius-md); background: var(--bg-surface); border: 1px solid var(--border-subtle); color: var(--text-main); font-family: 'JetBrains Mono', monospace; font-size: 1rem; text-transform: uppercase;" 
+            required 
+          />
+          <button type="submit" class="btn btn-primary" id="btn-submit-pnr">
+            Track Status ➔
+          </button>
+        </form>
+        <div style="margin-top: 14px; font-size: 0.82rem; color: var(--text-dim); display: flex; gap: 8px; align-items: center;">
+          <span>Demo PNRs:</span>
+          <button type="button" class="date-preset-chip" onclick="document.getElementById('input-pnr-query').value='TRN-884920';document.getElementById('btn-submit-pnr').click();">TRN-884920 (Acela Bullet)</button>
+          <button type="button" class="date-preset-chip" onclick="document.getElementById('input-pnr-query').value='BUS-621840';document.getElementById('btn-submit-pnr').click();">BUS-621840 (Volvo Sleeper)</button>
+        </div>
+      </div>
+
+      <div id="pnr-enquiry-result"></div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer style="margin-top: 80px; padding: 40px 0 30px; border-top: 1px solid var(--border-subtle); background: var(--bg-surface);">
+    <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-size: 1.6rem;">🚅</span>
+        <div>
+          <strong style="display: block;">VelocityPass Transit Systems</strong>
+          <small style="color: var(--text-dim);">Unified Train & Luxury Intercity Bus Booking Engine</small>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 24px; font-size: 0.85rem; color: var(--text-muted);">
+        <span>🔒 256-Bit SSL Checkout</span>
+        <span>⚡ Instant QR Boarding Pass</span>
+        <span>💵 85% Cancellation Refund</span>
+        <span>📍 Live GPS Fleet Radar</span>
+      </div>
+
+      <div style="font-size: 0.8rem; color: var(--text-dim);">
+        © 2026 VelocityPass Inc. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
